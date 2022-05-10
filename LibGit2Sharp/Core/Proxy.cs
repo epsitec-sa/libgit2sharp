@@ -466,7 +466,12 @@ namespace LibGit2Sharp.Core
 
         public static unsafe bool git_config_delete_multivar(ConfigurationHandle config, string name)
         {
-            int res = NativeMethods.git_config_delete_multivar(config, name, anyValue);
+            return git_config_delete_multivar(config, name, anyValue);
+        }
+
+        public static unsafe bool git_config_delete_multivar(ConfigurationHandle config, string name, string regexp)
+        {
+            int res = NativeMethods.git_config_delete_multivar(config, name, regexp);
 
             if (res == (int)GitErrorCode.NotFound)
             {

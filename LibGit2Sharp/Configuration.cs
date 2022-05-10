@@ -263,6 +263,16 @@ namespace LibGit2Sharp
         }
 
         /// <summary>
+        /// Unset all configuration values in a multivar variable (key and value) in the local configuration.
+        /// </summary>
+        /// <param name="key">The key to unset.</param>
+        /// <param name="regexp">The value to unset.</param>
+        public virtual bool UnsetAll(string key, string regexp)
+        {
+            return UnsetAll(key, regexp, ConfigurationLevel.Local);
+        }
+
+        /// <summary>
         /// Unset all configuration values in a multivar variable (key and value).
         /// </summary>
         /// <param name="key">The key to unset.</param>
@@ -274,6 +284,22 @@ namespace LibGit2Sharp
             using (ConfigurationHandle h = RetrieveConfigurationHandle(level, true, configHandle))
             {
                 return Proxy.git_config_delete_multivar(h, key);
+            }
+        }
+        /// <summary>
+        /// Unset all configuration values in a multivar variable (key and value).
+        /// </summary>
+        /// <param name="key">The key to unset.</param>
+        /// <param name="regexp">The value to unset.</param>
+        /// <param name="level">The configuration file which should be considered as the target of this operation</param>
+        public virtual bool UnsetAll(string key, string regexp, ConfigurationLevel level)
+        {
+            Ensure.ArgumentNotNullOrEmptyString(key, "key");
+            Ensure.ArgumentNotNullOrEmptyString(key, "regexp");
+
+            using (ConfigurationHandle h = RetrieveConfigurationHandle(level, true, configHandle))
+            {
+                return Proxy.git_config_delete_multivar(h, key, regexp);
             }
         }
 
