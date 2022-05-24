@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LibGit2Sharp.Repository">
+    <Position X="5.25" Y="2" Width="2.75" />
+    <Members>
+      <Method Name="AddToIndex" Hidden="true" />
+      <Field Name="branches" Hidden="true" />
+      <Method Name="BuildCommitLogMessage" Hidden="true" />
+      <Method Name="CheckoutTree" Hidden="true" />
+      <Method Name="CleanupDisposableDependencies" Hidden="true" />
+      <Field Name="commits" Hidden="true" />
+      <Field Name="config" Hidden="true" />
+      <Property Name="DebuggerDisplay" Hidden="true" />
+      <Field Name="diff" Hidden="true" />
+      <Method Name="Dispose" Hidden="true" />
+      <Method Name="EagerlyLoadComponentsWithSpecifiedPaths" Hidden="true" />
+      <Method Name="FastForwardMerge" Hidden="true" />
+      <Method Name="FastForwardStrategyFromMergePreference" Hidden="true" />
+      <Field Name="handle" Hidden="true" />
+      <Property Name="Handle" Hidden="true" />
+      <Field Name="ignore" Hidden="true" />
+      <Field Name="index" Hidden="true" />
+      <Field Name="info" Hidden="true" />
+      <Field Name="isBare" Hidden="true" />
+      <Method Name="LookupCommit" Hidden="true" />
+      <Method Name="LookupInternal" Hidden="true" />
+      <Property Name="MergeHeads" Hidden="true" />
+      <Field Name="network" Hidden="true" />
+      <Method Name="NormalMerge" Hidden="true" />
+      <Field Name="notes" Hidden="true" />
+      <Field Name="odb" Hidden="true" />
+      <Method Name="OnRepositoryOperationCompleted" Hidden="true" />
+      <Method Name="OnRepositoryOperationStarting" Hidden="true" />
+      <Field Name="pathCase" Hidden="true" />
+      <Property Name="PathComparer" Hidden="true" />
+      <Method Name="PathFromRevparseSpec" Hidden="true" />
+      <Field Name="rebaseOperation" Hidden="true" />
+      <Method Name="RecursivelyCloneSubmodules" Hidden="true" />
+      <Field Name="refs" Hidden="true" />
+      <Method Name="RegisterForCleanup" Hidden="true" />
+      <Method Name="ReloadFromDisk" Hidden="true" />
+      <Method Name="RemoveFromIndex" Hidden="true" />
+      <Method Name="RetrieveParentsOfTheCommitBeingCreated" Hidden="true" />
+      <Field Name="stashes" Hidden="true" />
+      <Field Name="submodules" Hidden="true" />
+      <Field Name="tags" Hidden="true" />
+      <Field Name="toCleanup" Hidden="true" />
+      <Method Name="ToFilePaths" Hidden="true" />
+      <Method Name="UpdateHeadAndTerminalReference" Hidden="true" />
+      <Method Name="UpdatePhysicalIndex" Hidden="true" />
+      <Field Name="worktrees" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Enum Name="LibGit2Sharp.Repository.RepositoryRequiredParameter" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Repository.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <AssociationLine Name="Head" Type="LibGit2Sharp.Branch" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8" Y="3.888" />
+        <Point X="11.938" Y="3.888" />
+        <Point X="11.938" Y="2.691" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>CIgiJVogqiAkBqgAECgQOBIiABZQIUIHXQFCkEyRIDE=</HashCode>
+      <FileName>Repository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ObjectDatabase" />
+      <Property Name="Branches" />
+      <Property Name="Refs" />
+      <Property Name="Head" />
+      <Property Name="Rebase" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Commits" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LibGit2Sharp.BranchCollection">
+    <Position X="9" Y="2" Width="1.5" />
+    <Members>
+      <Method Name="BranchCollection" Hidden="true" />
+      <Method Name="BuildFromReferenceName" Hidden="true" />
+      <Property Name="DebuggerDisplay" Hidden="true" />
+      <Method Name="GetEnumerator" Hidden="true" />
+      <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
+      <Method Name="LooksLikeABranchName" Hidden="true" />
+      <Field Name="repo" Hidden="true" />
+      <Method Name="ShortToLocalName" Hidden="true" />
+      <Method Name="ShortToRefName" Hidden="true" />
+      <Method Name="ShortToRemoteName" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAgAAAABAACIGABAAAAAAAAAAEABAAAAEAgAI=</HashCode>
+      <FileName>BranchCollection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="this[System.String]" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LibGit2Sharp.ObjectDatabase">
+    <Position X="1" Y="2" Width="3" />
+    <Members>
+      <Field Name="handle" Hidden="true" />
+      <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
+      <Method Name="InternalPack" Hidden="true" />
+      <Method Name="ObjectDatabase" Hidden="true" />
+      <Field Name="repo" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="LibGit2Sharp.ObjectDatabase.Processor">
+        <TypeIdentifier>
+          <NewMemberFileName>ObjectDatabase.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AABAAAUIAAAICBRAAAUggEAAkAACAAAEEEACAAFQIAA=</HashCode>
+      <FileName>ObjectDatabase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LibGit2Sharp.Commit" Collapsed="true">
+    <Position X="9" Y="4.25" Width="1.5" />
+    <Members>
+      <Method Name="Commit" Hidden="true" />
+      <Property Name="DebuggerDisplay" Hidden="true" />
+      <Field Name="group1" Hidden="true" />
+      <Field Name="group2" Hidden="true" />
+      <Field Name="lazyAuthor" Hidden="true" />
+      <Field Name="lazyCommitter" Hidden="true" />
+      <Field Name="lazyEncoding" Hidden="true" />
+      <Field Name="lazyMessage" Hidden="true" />
+      <Field Name="lazyMessageShort" Hidden="true" />
+      <Field Name="lazyNotes" Hidden="true" />
+      <Field Name="lazyTree" Hidden="true" />
+      <Field Name="parents" Hidden="true" />
+      <Method Name="RetrieveEncodingOf" Hidden="true" />
+      <Method Name="RetrieveNotesOfCommit" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="LibGit2Sharp.Commit.ParentsCollection" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Commit.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>QAogQAgAgACCAEAAiIACAAAAgAAAgSBAAAAAIEAIEAA=</HashCode>
+      <FileName>Commit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LibGit2Sharp.Branch" Collapsed="true">
+    <Position X="11.25" Y="2" Width="1.5" />
+    <Members>
+      <Method Name="Branch" Hidden="true" />
+      <Method Name="IsRemoteBranch" Hidden="true" />
+      <Method Name="RemoteNameFromLocalBranch" Hidden="true" />
+      <Method Name="RemoteNameFromRemoteTrackingBranch" Hidden="true" />
+      <Method Name="ResolveTrackedBranch" Hidden="true" />
+      <Method Name="Shorten" Hidden="true" />
+      <Field Name="trackedBranch" Hidden="true" />
+      <Method Name="UpstreamBranchCanonicalNameFromLocalBranch" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>gIAAAACBAAAAADAACDEAgAAAAAIQAAAAAAQIAAIAQAA=</HashCode>
+      <FileName>Branch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LibGit2Sharp.ReferenceCollection">
+    <Position X="13" Y="3.25" Width="2.25" />
+    <Members>
+      <Property Name="DebuggerDisplay" Hidden="true" />
+      <Method Name="EnsureHasLog" Hidden="true" />
+      <Method Name="GetEnumerator" Hidden="true" />
+      <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
+      <Method Name="MoveHeadTarget" Hidden="true" />
+      <Method Name="ReferenceCollection" Hidden="true" />
+      <Field Name="repo" Hidden="true" />
+      <Method Name="Resolve" Hidden="true" />
+      <Method Name="RetrieveReferencePtr" Hidden="true" />
+      <Method Name="TryResolveReference" Hidden="true" />
+      <Method Name="UpdateDirectReferenceTarget" Hidden="true" />
+      <Method Name="UpdateHeadTarget" Hidden="true" />
+      <Method Name="UpdateSymbolicRefenceTarget" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Enum Name="LibGit2Sharp.ReferenceCollection.RefState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ReferenceCollection.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAIACAAAgAGQAJQACAkALAAIAIgAQAAEAAAAAAAAgAA=</HashCode>
+      <FileName>ReferenceCollection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="this[System.String]" />
+      <Property Name="Head" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LibGit2Sharp.Reference">
+    <Position X="16.25" Y="2.5" Width="2" />
+    <Members>
+      <Method Name="BuildFromPtr" Hidden="true" />
+      <Field Name="canonicalName" Hidden="true" />
+      <Property Name="DebuggerDisplay" Hidden="true" />
+      <Field Name="equalityHelper" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Property Name="IBelongToARepository.Repository" Hidden="true" />
+      <Property Name="LocalBranchPrefix" Hidden="true" />
+      <Property Name="NotePrefix" Hidden="true" />
+      <Method Name="operator !=" Hidden="true" />
+      <Method Name="operator ==" Hidden="true" />
+      <Method Name="Reference" Hidden="true" />
+      <Property Name="RemoteTrackingBranchPrefix" Hidden="true" />
+      <Field Name="repo" Hidden="true" />
+      <Property Name="TagPrefix" Hidden="true" />
+      <Field Name="targetIdentifier" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAQQgGCIAAgEgAEAAAAQAAAYAIGAQAAIAAAACqA=</HashCode>
+      <FileName>Reference.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LibGit2Sharp.Rebase">
+    <Position X="9" Y="6" Width="1.75" />
+    <Members>
+      <Method Name="AnnotatedCommitHandleFromRefHandle" Hidden="true" />
+      <Method Name="EnsureNonBareRepo" Hidden="true" />
+      <Method Name="Rebase" Hidden="true" />
+      <Field Name="repository" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAACIAAACACADAAAgAAAAAAAAAAAACAAAAAAAQAIAA=</HashCode>
+      <FileName>Rebase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LibGit2Sharp.Commands">
+    <Position X="1.5" Y="9" Width="2" />
+    <Members>
+      <Method Name="BuildFrom" Hidden="true" />
+      <Method Name="Enumerate" Hidden="true" />
+      <Method Name="PrepareBatch" Hidden="true" />
+      <Method Name="RemoteFromNameOrUrl" Hidden="true" />
+      <Method Name="RemoveFilesAndFolders" Hidden="true" />
+      <Method Name="RemoveStagedItems" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAEAAAAACICABAAAAWEABQAAAAAAAAAAAAgAAAAAgAA=</HashCode>
+      <FileName>Commands\Checkout.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
