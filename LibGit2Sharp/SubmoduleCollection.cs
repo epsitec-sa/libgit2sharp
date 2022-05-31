@@ -121,6 +121,8 @@ namespace LibGit2Sharp
         {
             return Proxy.git_submodule_foreach(repo.Handle, (h, n) => LaxUtf8Marshaler.FromNative(n))
                         .Select(n => this[n])
+                        // filter out zombies
+                        .Where(sm => sm.Url != null)
                         .GetEnumerator();
         }
 
