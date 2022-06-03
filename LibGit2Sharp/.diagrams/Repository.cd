@@ -57,11 +57,10 @@
         </TypeIdentifier>
       </Enum>
     </NestedTypes>
-    <AssociationLine Name="Head" Type="LibGit2Sharp.Branch" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="Head" Type="LibGit2Sharp.Branch" FixedFromPoint="true">
       <Path>
-        <Point X="8" Y="3.888" />
-        <Point X="11.938" Y="3.888" />
-        <Point X="11.938" Y="2.691" />
+        <Point X="8" Y="3.875" />
+        <Point X="11.25" Y="3.875" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
@@ -69,11 +68,11 @@
       <FileName>Repository.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="ObjectDatabase" />
-      <Property Name="Branches" />
-      <Property Name="Refs" />
       <Property Name="Head" />
       <Property Name="Rebase" />
+      <Property Name="ObjectDatabase" />
+      <Property Name="Refs" />
+      <Property Name="Branches" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Commits" />
@@ -106,6 +105,7 @@
   <Class Name="LibGit2Sharp.ObjectDatabase">
     <Position X="1" Y="2" Width="3" />
     <Members>
+      <Method Name="GetEnumerator" Hidden="true" />
       <Field Name="handle" Hidden="true" />
       <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
       <Method Name="InternalPack" Hidden="true" />
@@ -114,6 +114,11 @@
     </Members>
     <NestedTypes>
       <Class Name="LibGit2Sharp.ObjectDatabase.Processor">
+        <Members>
+          <Field Name="numberOfBytesToConsume" Hidden="true" />
+          <Field Name="stream" Hidden="true" />
+          <Field Name="totalNumberOfReadBytes" Hidden="true" />
+        </Members>
         <TypeIdentifier>
           <NewMemberFileName>ObjectDatabase.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -127,36 +132,12 @@
   </Class>
   <Class Name="LibGit2Sharp.Commit" Collapsed="true">
     <Position X="9" Y="4.25" Width="1.5" />
-    <Members>
-      <Method Name="Commit" Hidden="true" />
-      <Property Name="DebuggerDisplay" Hidden="true" />
-      <Field Name="group1" Hidden="true" />
-      <Field Name="group2" Hidden="true" />
-      <Field Name="lazyAuthor" Hidden="true" />
-      <Field Name="lazyCommitter" Hidden="true" />
-      <Field Name="lazyEncoding" Hidden="true" />
-      <Field Name="lazyMessage" Hidden="true" />
-      <Field Name="lazyMessageShort" Hidden="true" />
-      <Field Name="lazyNotes" Hidden="true" />
-      <Field Name="lazyTree" Hidden="true" />
-      <Field Name="parents" Hidden="true" />
-      <Method Name="RetrieveEncodingOf" Hidden="true" />
-      <Method Name="RetrieveNotesOfCommit" Hidden="true" />
-    </Members>
-    <NestedTypes>
-      <Class Name="LibGit2Sharp.Commit.ParentsCollection" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Commit.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-    </NestedTypes>
     <TypeIdentifier>
       <HashCode>QAogQAgAgACCAEAAiIACAAAAgAAAgSBAAAAAIEAIEAA=</HashCode>
       <FileName>Commit.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="LibGit2Sharp.Branch" Collapsed="true">
+  <Class Name="LibGit2Sharp.Branch">
     <Position X="11.25" Y="2" Width="1.5" />
     <Members>
       <Method Name="Branch" Hidden="true" />
@@ -165,7 +146,6 @@
       <Method Name="RemoteNameFromRemoteTrackingBranch" Hidden="true" />
       <Method Name="ResolveTrackedBranch" Hidden="true" />
       <Method Name="Shorten" Hidden="true" />
-      <Field Name="trackedBranch" Hidden="true" />
       <Method Name="UpstreamBranchCanonicalNameFromLocalBranch" Hidden="true" />
     </Members>
     <TypeIdentifier>
@@ -248,7 +228,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="LibGit2Sharp.Commands">
-    <Position X="1.5" Y="9" Width="2" />
+    <Position X="1.5" Y="8" Width="2" />
     <Members>
       <Method Name="BuildFrom" Hidden="true" />
       <Method Name="Enumerate" Hidden="true" />
