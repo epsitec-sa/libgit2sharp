@@ -56,6 +56,14 @@
       <Method Name="RetrieveEncodingOf" Hidden="true" />
       <Method Name="RetrieveNotesOfCommit" Hidden="true" />
     </Members>
+    <NestedTypes>
+      <Class Name="LibGit2Sharp.Commit.ParentsCollection" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Commit.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
     <InheritanceLine Type="LibGit2Sharp.GitObject" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="6.75" Y="7.488" />
@@ -77,10 +85,6 @@
   </Class>
   <Class Name="LibGit2Sharp.GitLink" Collapsed="true">
     <Position X="11.25" Y="8.25" Width="1.5" />
-    <Members>
-      <Property Name="DebuggerDisplay" Hidden="true" />
-      <Method Name="GitLink" Hidden="true" />
-    </Members>
     <TypeIdentifier>
       <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GitLink.cs</FileName>
@@ -358,8 +362,12 @@
     </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="LibGit2Sharp.DetachedHead" Collapsed="true">
+  <Class Name="LibGit2Sharp.DetachedHead">
     <Position X="5.5" Y="15.75" Width="1.5" />
+    <Members>
+      <Method Name="DetachedHead" Hidden="true" />
+      <Method Name="Shorten" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>gAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DetachedHead.cs</FileName>
