@@ -1,11 +1,18 @@
 ﻿namespace LibGit2Sharp
 {
-    internal class DetachedHead : Branch
+    /// <summary>
+    /// Represent a detached head.
+    /// </summary>
+    public class DetachedHead : Branch
     {
         internal DetachedHead(Repository repo, Reference reference)
             : base(repo, reference, "(no branch)")
         { }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns>The constant '(no branch)'</returns>
         protected override string Shorten()
         {
             return CanonicalName;
