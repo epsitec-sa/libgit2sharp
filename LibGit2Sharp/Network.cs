@@ -383,7 +383,7 @@ namespace LibGit2Sharp
         /// <summary>
         /// The heads that have been updated during the last fetch.
         /// </summary>
-        internal virtual IEnumerable<FetchHead> FetchHeads
+        public virtual IEnumerable<FetchHead> FetchHeads
         {
             get
             {

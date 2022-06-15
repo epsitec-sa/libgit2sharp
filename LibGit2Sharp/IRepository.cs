@@ -75,6 +75,11 @@ namespace LibGit2Sharp
         WorktreeCollection Worktrees { get; }
 
         /// <summary>
+        /// Gets the references to the tips that are currently being merged.
+        /// </summary>
+        IEnumerable<MergeHead> MergeHeads { get; }
+
+        /// <summary>
         /// Checkout the specified tree.
         /// </summary>
         /// <param name="tree">The <see cref="Tree"/> to checkout.</param>

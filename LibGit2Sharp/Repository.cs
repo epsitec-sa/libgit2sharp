@@ -1618,7 +1618,7 @@ namespace LibGit2Sharp
         /// <summary>
         /// Gets the references to the tips that are currently being merged.
         /// </summary>
-        internal IEnumerable<MergeHead> MergeHeads
+        public IEnumerable<MergeHead> MergeHeads
         {
             get
             {
