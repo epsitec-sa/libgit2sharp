@@ -49,6 +49,16 @@ namespace LibGit2Sharp
             Init(repository);
         }
 
+        /// <summary>
+        /// Creates a configuration with local scope only.
+        /// </summary>
+        /// <param name="repositoryConfigurationFileLocation">Path to an existing configuration file.</param>
+        public Configuration(string repositoryConfigurationFileLocation)
+        {
+            repoConfigPath = NormalizeConfigPath(repositoryConfigurationFileLocation);
+            Init(null);
+        }
+
         private void Init(Repository repository)
         {
             configHandle = Proxy.git_config_new();
