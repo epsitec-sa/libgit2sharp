@@ -23,6 +23,9 @@
       <HashCode>AAACAAAAgACAAAAEgQEAAAgAQACAAIEAQACAACAAAiA=</HashCode>
       <FileName>GitObject.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Id" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="LibGit2Sharp.Blob">
@@ -66,7 +69,7 @@
     </NestedTypes>
     <InheritanceLine Type="LibGit2Sharp.GitObject" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="6.75" Y="7.488" />
+        <Point X="6.75" Y="7.296" />
         <Point X="6.75" Y="8.25" />
       </Path>
     </InheritanceLine>
@@ -420,6 +423,41 @@
       <HashCode>gAAAAAAAAAAAAAAAAQAAAAAAAAAIAAAAAAEAIAAAUAA=</HashCode>
       <FileName>Stash.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="LibGit2Sharp.ObjectId">
+    <Position X="8.25" Y="6" Width="1.5" />
+    <Members>
+      <Method Name="BuildFromPtr" Hidden="true" />
+      <Method Name="BuildOidFrom" Hidden="true" />
+      <Method Name="BuildReverseHexDigits" Hidden="true" />
+      <Field Name="byteConverter" Hidden="true" />
+      <Field Name="equalityHelper" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="explicit operator ObjectId" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Field Name="hexDigits" Hidden="true" />
+      <Field Name="HexSize" Hidden="true" />
+      <Method Name="LooksValid" Hidden="true" />
+      <Method Name="NormalizeLength" Hidden="true" />
+      <Method Name="ObjectId" Hidden="true" />
+      <Field Name="oid" Hidden="true" />
+      <Property Name="Oid" Hidden="true" />
+      <Method Name="operator !=" Hidden="true" />
+      <Method Name="operator ==" Hidden="true" />
+      <Field Name="rawSize" Hidden="true" />
+      <Field Name="reverseHexDigits" Hidden="true" />
+      <Field Name="sha" Hidden="true" />
+      <Method Name="StartsWith" Hidden="true" />
+      <Method Name="ToOid" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="TryParse" Hidden="true" />
+      <Field Name="Zero" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AICAABRAAEBAgAAFwAAAAAAQAQAISIEAAACAAAAAAyQ=</HashCode>
+      <FileName>ObjectId.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
