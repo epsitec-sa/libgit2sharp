@@ -50,6 +50,11 @@ namespace LibGit2Sharp.Core
                     SortBy = CommitSortStrategies.Reverse | CommitSortStrategies.Topological
                 };
 
+                if (options.ExcludeReachableFromTargetCommitsParents)
+                {
+                    filter.ExcludeReachableFrom = targetedCommits.SelectMany(commit => commit.Parents);
+                }
+
                 var commits = repo.Commits.QueryBy(filter);
                 foreach (var commit in commits)
                 {

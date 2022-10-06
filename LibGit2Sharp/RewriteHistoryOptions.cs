@@ -51,6 +51,11 @@ namespace LibGit2Sharp
         public bool PruneEmptyCommits { get; set; }
 
         /// <summary>
+        /// Do not rewrite commits reachable from target commits parents.
+        /// </summary>
+        public bool ExcludeReachableFromTargetCommitsParents { get; set; }
+
+        /// <summary>
         /// Action to exectute after rewrite succeeds,
         /// but before it is finalized.
         /// <para>
