@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace LibGit2Sharp.Core
@@ -96,6 +97,7 @@ namespace LibGit2Sharp.Core
             finally
             {
                 rollbackActions.Clear();
+                Directory.Delete(Path.Combine(repo.Info.Path, backupRefsNamespace), recursive: true);
             }
         }
 
