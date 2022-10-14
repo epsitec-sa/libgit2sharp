@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace LibGit2Sharp.Core
@@ -48,6 +49,11 @@ namespace LibGit2Sharp.Core
                     IncludeReachableFrom = refsToRewrite,
                     SortBy = CommitSortStrategies.Reverse | CommitSortStrategies.Topological
                 };
+
+                if (options.ExcludeReachableFromTargetCommitsParents)
+                {
+                    filter.ExcludeReachableFrom = targetedCommits.SelectMany(commit => commit.Parents);
+                }
 
                 var commits = repo.Commits.QueryBy(filter);
                 foreach (var commit in commits)
@@ -96,6 +102,7 @@ namespace LibGit2Sharp.Core
             finally
             {
                 rollbackActions.Clear();
+                Directory.Delete(Path.Combine(repo.Info.Path, backupRefsNamespace), recursive: true);
             }
         }
 
