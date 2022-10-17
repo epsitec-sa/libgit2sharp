@@ -484,22 +484,26 @@ namespace LibGit2Sharp.Core
 
         public static FilePath git_config_find_global()
         {
-            return ConvertPath(NativeMethods.git_config_find_global);
+            try { return ConvertPath(NativeMethods.git_config_find_global); }
+            catch { return null; }
         }
 
         public static FilePath git_config_find_system()
         {
-            return ConvertPath(NativeMethods.git_config_find_system);
+            try { return ConvertPath(NativeMethods.git_config_find_system); }
+            catch { return null; }
         }
 
         public static FilePath git_config_find_xdg()
         {
-            return ConvertPath(NativeMethods.git_config_find_xdg);
+            try { return ConvertPath(NativeMethods.git_config_find_xdg); }
+            catch { return null; }
         }
 
         public static FilePath git_config_find_programdata()
         {
-            return ConvertPath(NativeMethods.git_config_find_programdata);
+            try { return ConvertPath(NativeMethods.git_config_find_programdata); }
+            catch { return null; }
         }
 
         public static unsafe void git_config_free(git_config *config)
