@@ -66,9 +66,6 @@ namespace LibGit2Sharp.Core
             return Path.Combine(nativeLibraryDir, libgit2 + Platform.GetNativeLibraryExtension());
         }
 
-#if NETSTANDARD
-        private static bool TryUseNativeLibrary() => false;
-#else
         private static bool TryUseNativeLibrary()
         {
             NativeLibrary.SetDllImportResolver(typeof(NativeMethods).Assembly, ResolveDll);
@@ -123,7 +120,6 @@ namespace LibGit2Sharp.Core
 
             return handle;
         }
-#endif
 
         public const int RTLD_NOW = 0x002;
 

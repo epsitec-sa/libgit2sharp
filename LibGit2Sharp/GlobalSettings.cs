@@ -49,7 +49,7 @@ namespace LibGit2Sharp
             // backslashes flipped.  This is superior to EscapedCodeBase,
             // which does not correctly escape things, and ambiguates a
             // space (%20) with a literal `%20` in the path.  Sigh.
-            var managedPath = Assembly.GetExecutingAssembly().CodeBase;
+            var managedPath = Assembly.GetExecutingAssembly().Location;
             if (managedPath == null)
             {
                 managedPath = Assembly.GetExecutingAssembly().Location;
