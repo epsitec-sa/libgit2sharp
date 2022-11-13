@@ -1,4 +1,10 @@
 <Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == ''">
+    <TargetFrameworks>net6;net7</TargetFrameworks>
+    <TargetFramework />
+  </PropertyGroup>
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
