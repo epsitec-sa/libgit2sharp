@@ -93,21 +93,21 @@ namespace LibGit2Sharp.Core
                     return handle;
                 }
 
-                // We carry a number of .so files for Linux which are linked against various
+                // We carry a number of .so or .dylib files for Linux and OSX which are linked against various
                 // libc/OpenSSL libraries. Try them out.
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    // The libraries are located at 'runtimes/<rid>/native/lib{libraryName}.so'
+                    // The libraries are located at 'runtimes/<rid>/native/{libraryName}(.so|.dylib)'
                     // The <rid> ends with the processor architecture. e.g. fedora-x64.
                     string assemblyDirectory = Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
                     string processorArchitecture = RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
                     string runtimesDirectory = Path.Combine(assemblyDirectory, "runtimes");
-
+                    string extension = Platform.GetNativeLibraryExtension();
                     if (Directory.Exists(runtimesDirectory))
                     {
                         foreach (var runtimeFolder in Directory.GetDirectories(runtimesDirectory, $"*-{processorArchitecture}"))
                         {
-                            string libPath = Path.Combine(runtimeFolder, "native", $"lib{libraryName}.so");
+                            string libPath = Path.Combine(runtimeFolder, "native", $"{libraryName}{extension}");
 
                             if (NativeLibrary.TryLoad(libPath, out handle))
                             {
