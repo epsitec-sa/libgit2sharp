@@ -1,9 +1,8 @@
 using System;
-using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+
 using LibGit2Sharp.Core.Handles;
 
 // Restrict the set of directories where the native library is loaded from to safe directories.
@@ -13,7 +12,6 @@ namespace LibGit2Sharp.Core
 {
     internal static class NativeMethods
     {
-        public const uint GIT_PATH_MAX = 4096;
         private const string libgit2 = NativeDllName.Name;
 
         // An object tied to the lifecycle of the NativeMethods static class.
@@ -23,105 +21,8 @@ namespace LibGit2Sharp.Core
 
         static NativeMethods()
         {
-            if (Platform.IsRunningOnNetFramework() || Platform.IsRunningOnNetCore())
-            {
-                // Use NativeLibrary when available.
-                if (!TryUseNativeLibrary())
-                {
-                    // NativeLibrary is not available, fall back.
-
-                    // Use GlobalSettings.NativeLibraryPath when set.
-                    // Try to load the .dll from the path explicitly.
-                    // If this call succeeds further DllImports will find the library loaded and not attempt to load it again.
-                    // If it fails the next DllImport will load the library from safe directories.
-                    string nativeLibraryPath = GetGlobalSettingsNativeLibraryPath();
-
-                    if (nativeLibraryPath != null)
-                    {
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-
-                        {
-                            LoadWindowsLibrary(nativeLibraryPath);
-                        }
-                        else
-                        {
-                            LoadUnixLibrary(nativeLibraryPath, RTLD_NOW);
-                        }
-                    }
-                }
-            }
-
             InitializeNativeLibrary();
         }
-
-        private static string GetGlobalSettingsNativeLibraryPath()
-        {
-            string nativeLibraryDir = GlobalSettings.GetAndLockNativeLibraryPath();
-
-            if (nativeLibraryDir == null)
-            {
-                return null;
-            }
-
-            return Path.Combine(nativeLibraryDir, libgit2 + Platform.GetNativeLibraryExtension());
-        }
-
-        private static bool TryUseNativeLibrary()
-        {
-            NativeLibrary.SetDllImportResolver(typeof(NativeMethods).Assembly, ResolveDll);
-
-            return true;
-        }
-
-        private static IntPtr ResolveDll(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
-        {
-            IntPtr handle = IntPtr.Zero;
-
-            if (libraryName == libgit2)
-            {
-                // Use GlobalSettings.NativeLibraryPath when set.
-                string nativeLibraryPath = GetGlobalSettingsNativeLibraryPath();
-
-                if (nativeLibraryPath != null && NativeLibrary.TryLoad(nativeLibraryPath, out handle))
-                {
-                    return handle;
-                }
-
-                // Use Default DllImport resolution.
-                if (NativeLibrary.TryLoad(libraryName, assembly, searchPath, out handle))
-                {
-                    return handle;
-                }
-
-                // We carry a number of .so or .dylib files for Linux and OSX which are linked against various
-                // libc/OpenSSL libraries. Try them out.
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    // The libraries are located at 'runtimes/<rid>/native/{libraryName}(.so|.dylib)'
-                    // The <rid> ends with the processor architecture. e.g. fedora-x64.
-                    string assemblyDirectory = Path.GetDirectoryName(typeof(NativeMethods).Assembly.Location);
-                    string processorArchitecture = RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
-                    string runtimesDirectory = Path.Combine(assemblyDirectory, "runtimes");
-                    string extension = Platform.GetNativeLibraryExtension();
-                    if (Directory.Exists(runtimesDirectory))
-                    {
-                        foreach (var runtimeFolder in Directory.GetDirectories(runtimesDirectory, $"*-{processorArchitecture}"))
-                        {
-                            string libPath = Path.Combine(runtimeFolder, "native", $"{libraryName}{extension}");
-
-                            if (NativeLibrary.TryLoad(libPath, out handle))
-                            {
-                                return handle;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return handle;
-        }
-
-        public const int RTLD_NOW = 0x002;
 
         [DllImport("libdl", EntryPoint = "dlopen")]
         private static extern IntPtr LoadUnixLibrary(string path, int flags);
