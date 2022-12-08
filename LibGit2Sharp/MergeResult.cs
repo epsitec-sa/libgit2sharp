@@ -11,7 +11,12 @@
         protected MergeResult()
         { }
 
-        internal MergeResult(MergeStatus status, Commit commit = null)
+        /// <summary>
+        /// Initialize a new instance of the <see cref="MergeResult"/> class. 
+        /// </summary>
+        /// <param name="status">The status of the merge.</param>
+        /// <param name="commit">The resulting commit of the merge.</param>
+        public MergeResult(MergeStatus status, Commit commit = null)
         {
             this.Status = status;
             this.Commit = commit;
