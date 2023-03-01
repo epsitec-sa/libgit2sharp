@@ -15,7 +15,14 @@ namespace LibGit2Sharp
         protected DirectReference()
         { }
 
-        internal DirectReference(string canonicalName, IRepository repo, ObjectId targetId)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirectReference"/> class.
+        /// </summary>
+        /// <param name="canonicalName">The canonical name.</param>
+        /// <param name="repo">The repository.</param>
+        /// <param name="targetId"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public DirectReference(string canonicalName, IRepository repo, ObjectId targetId)
             : base(repo, canonicalName, targetId.Sha)
         {
             targetBuilder = new Lazy<GitObject>(() =>
