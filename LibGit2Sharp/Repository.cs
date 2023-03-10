@@ -692,6 +692,41 @@ namespace LibGit2Sharp
         }
 
         /// <summary>
+        /// Check if we can connect to a remote with a specific credentials handler.
+        /// </summary>
+        /// <remarks><inheritdoc cref="ListRemoteReferences(string)"/></remarks>
+        /// <param name="url">The url to list from.</param>
+        /// <param name="credentialsHandler">The <see cref="CredentialsHandler"/> used to connect to remote repository.</param>
+        /// <returns>True if the connection is valid, false otherwise.</returns>
+        public static bool CanConnect(string url, CredentialsHandler credentialsHandler)
+        {
+            Ensure.ArgumentNotNull(url, "url");
+
+            using (RepositoryHandle repositoryHandle = Proxy.git_repository_new())
+            using (RemoteHandle remoteHandle = Proxy.git_remote_create_anonymous(repositoryHandle, url))
+            {
+                var gitCallbacks = new GitRemoteCallbacks { version = 1 };
+                var proxyOptions = new GitProxyOptions { Version = 1 };
+
+                if (credentialsHandler != null)
+                {
+                    var callbacks = new RemoteCallbacks(credentialsHandler);
+                    gitCallbacks = callbacks.GenerateCallbacks();
+                }
+
+                try
+                {
+                    Proxy.git_remote_connect(remoteHandle, GitDirection.Fetch, ref gitCallbacks, ref proxyOptions);
+                    return true;
+                }
+                catch(LibGit2SharpException)
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
         /// Probe for a git repository.
         /// <para>The lookup start from <paramref name="startingPath"/> and walk upward parent directories if nothing has been found.</para>
         /// </summary>
