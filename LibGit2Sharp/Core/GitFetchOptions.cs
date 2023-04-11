@@ -11,7 +11,7 @@ namespace LibGit2Sharp.Core
         public bool UpdateFetchHead = true;
         public TagFetchMode download_tags;
         public GitProxyOptions ProxyOptions;
-        public RemoteFollowRedirects FollowRedirects;
+        public RemoteRedirectMode FollowRedirects = RemoteRedirectMode.Initial;
         public GitStrArrayManaged CustomHeaders;
     }
 }
