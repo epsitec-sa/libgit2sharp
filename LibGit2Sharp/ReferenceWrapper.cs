@@ -110,6 +110,11 @@ namespace LibGit2Sharp
                 return null;
             }
 
+            if (target is TagAnnotation tagAnnotation && typeof(TObject) != typeof(TagAnnotation))
+            {
+                target = tagAnnotation.Target;
+            }
+
             return repo.Lookup<TObject>(target.Id);
         }
 
