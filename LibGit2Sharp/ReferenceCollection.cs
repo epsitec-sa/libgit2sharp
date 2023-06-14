@@ -824,14 +824,14 @@ namespace LibGit2Sharp
         /// </summary>
         /// <param name="options">Specifies behavior for this rewrite.</param>
         /// <param name="commitsToRewrite">The <see cref="Commit"/> objects to rewrite.</param>
-        public virtual void RewriteHistory(RewriteHistoryOptions options, IEnumerable<Commit> commitsToRewrite)
+        /// <param name="getRefsToRewrite">A function that overrides the default refs to rewrite.</param>
+        public virtual void RewriteHistory(RewriteHistoryOptions options, IEnumerable<Commit> commitsToRewrite, Func<IEnumerable<Reference>>? getRefsToRewrite = null)
         {
             Ensure.ArgumentNotNull(commitsToRewrite, "commitsToRewrite");
             Ensure.ArgumentNotNull(options, "options");
             Ensure.ArgumentNotNullOrEmptyString(options.BackupRefsNamespace, "options.BackupRefsNamespace");
 
-            IList<Reference> originalRefs = this.ToList();
-            if (originalRefs.Count == 0)
+            if (!this.Any())
             {
                 // Nothing to do
                 return;
@@ -839,7 +839,7 @@ namespace LibGit2Sharp
 
             var historyRewriter = new HistoryRewriter(repo, commitsToRewrite, options);
 
-            historyRewriter.Execute();
+            historyRewriter.Execute(getRefsToRewrite);
         }
 
         /// <summary>

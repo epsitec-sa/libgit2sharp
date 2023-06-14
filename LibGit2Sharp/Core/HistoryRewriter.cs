@@ -36,13 +36,15 @@ namespace LibGit2Sharp.Core
             }
         }
 
-        public void Execute()
+        public void Execute(Func<IEnumerable<Reference>>? getRefsToRewrite = null)
         {
             var success = false;
             try
             {
+                getRefsToRewrite ??= () => repo.Refs.ReachableFrom(targetedCommits);
+
                 // Find out which refs lead to at least one the commits
-                var refsToRewrite = repo.Refs.ReachableFrom(targetedCommits).ToList();
+                var refsToRewrite = getRefsToRewrite().ToList();
 
                 var filter = new CommitFilter
                 {
