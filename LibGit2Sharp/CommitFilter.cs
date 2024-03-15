@@ -73,15 +73,7 @@ namespace LibGit2Sharp
                 return list;
             }
 
-            var types = new[]
-                        {
-                            typeof(string), typeof(ObjectId),
-                            typeof(Commit), typeof(TagAnnotation),
-                            typeof(Tag), typeof(Branch), typeof(DetachedHead),
-                            typeof(Reference), typeof(DirectReference), typeof(SymbolicReference)
-                        };
-
-            if (types.Contains(obj.GetType()))
+            if (Types.Contains(obj.GetType()))
             {
                 list.Add(obj);
                 return list;
@@ -89,6 +81,23 @@ namespace LibGit2Sharp
 
             list.AddRange(((IEnumerable)obj).Cast<object>());
             return list;
+        }
+
+        private static IEnumerable<Type> Types
+        {
+            get
+            {
+                yield return typeof(string);
+                yield return typeof(ObjectId);
+                yield return typeof(Commit);
+                yield return typeof(TagAnnotation);
+                yield return typeof(Tag);
+                yield return typeof(Branch);
+                yield return typeof(DetachedHead);
+                yield return typeof(Reference);
+                yield return typeof(DirectReference);
+                yield return typeof(SymbolicReference);
+            }
         }
     }
 }
