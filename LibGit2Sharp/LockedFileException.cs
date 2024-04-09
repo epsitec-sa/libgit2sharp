@@ -1,4 +1,7 @@
 ﻿using System;
+#if NETFRAMEWORK
+using System.Runtime.Serialization;
+#endif
 using LibGit2Sharp.Core;
 
 namespace LibGit2Sharp
@@ -6,6 +9,9 @@ namespace LibGit2Sharp
     /// <summary>
     /// The exception that is thrown attempting to open a locked file.
     /// </summary>
+#if NETFRAMEWORK
+    [Serializable]
+#endif
     public class LockedFileException : NativeException
     {
         /// <summary>
@@ -25,7 +31,7 @@ namespace LibGit2Sharp
         /// <summary>
         /// Initializes a new instance of the <see cref="LibGit2Sharp.LockedFileException"/> class with a specified error message.
         /// </summary>
-        /// <param name="format">A composite format string for use in <see cref="String.Format(IFormatProvider, string, object[])"/>.</param>
+        /// <param name="format">A composite format string for use in <see cref="string.Format(IFormatProvider, string, object[])"/>.</param>
         /// <param name="args">An object array that contains zero or more objects to format.</param>
         public LockedFileException(string format, params object[] args)
             : base(format, args)
@@ -39,6 +45,17 @@ namespace LibGit2Sharp
         public LockedFileException(string message, Exception innerException)
             : base(message, innerException)
         { }
+
+#if NETFRAMEWORK
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LibGit2Sharp.LockedFileException"/> class with a serialized data.
+        /// </summary>
+        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
+        protected LockedFileException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        { }
+#endif
 
         internal LockedFileException(string message, GitErrorCategory category)
             : base(message, category)

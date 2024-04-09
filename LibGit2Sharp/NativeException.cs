@@ -1,4 +1,7 @@
 ﻿using System;
+#if NETFRAMEWORK
+using System.Runtime.Serialization;
+#endif
 using LibGit2Sharp.Core;
 
 namespace LibGit2Sharp
@@ -6,6 +9,9 @@ namespace LibGit2Sharp
     /// <summary>
     /// An exception thrown that corresponds to a libgit2 (native library) error.
     /// </summary>
+#if NETFRAMEWORK
+    [Serializable]
+#endif
     public abstract class NativeException : LibGit2SharpException
     {
         /// <summary>
@@ -26,6 +32,12 @@ namespace LibGit2Sharp
             : base(format, args)
         {
         }
+
+#if NETFRAMEWORK
+        internal NativeException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        { }
+#endif
 
         internal NativeException(string message, GitErrorCategory category) : this(message)
         {

@@ -20,6 +20,10 @@
     <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\square-logo.png" Pack="true" PackagePath="" Visible="false" />
     <None Include="..\README.md" Pack="true" PackagePath="App_Readme/" Visible="false" />

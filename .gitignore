@@ -39,5 +39,5 @@ _ReSharper*/
 .idea
 
 _NCrunch_LibGit2Sharp/
-packages/
+artifacts/
 worktree.playlist

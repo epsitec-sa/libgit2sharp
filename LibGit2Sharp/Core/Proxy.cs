@@ -86,7 +86,7 @@ namespace LibGit2Sharp.Core
             new[] { buf });
         }
 
-        public static unsafe UnmanagedMemoryStream git_blob_rawcontent_stream(RepositoryHandle repo, ObjectId id, Int64 size)
+        public static unsafe UnmanagedMemoryStream git_blob_rawcontent_stream(RepositoryHandle repo, ObjectId id, long size)
         {
             var handle = new ObjectSafeWrapper(id, repo, throwIfMissing: true).ObjectPtr;
             return new RawContentStream(handle, h => NativeMethods.git_blob_rawcontent(h), h => size);
@@ -341,7 +341,7 @@ namespace LibGit2Sharp.Core
             using (var treeHandle = Proxy.git_object_lookup(tree.repo.Handle, tree.Id, GitObjectType.Tree))
             using (var buf = new GitBuf())
             {
-                ObjectHandle[] handles = new ObjectHandle[0];
+                ObjectHandle[] handles = Array.Empty<ObjectHandle>();
                 try
                 {
                     handles = parents.Select(c => Proxy.git_object_lookup(c.repo.Handle, c.Id, GitObjectType.Commit)).ToArray();
@@ -881,7 +881,7 @@ namespace LibGit2Sharp.Core
             }
         }
 
-        public static int git_error_set_str(GitErrorCategory error_class, String errorString)
+        public static int git_error_set_str(GitErrorCategory error_class, string errorString)
         {
             return NativeMethods.git_error_set_str(error_class, errorString);
         }
@@ -2378,7 +2378,7 @@ namespace LibGit2Sharp.Core
             }
 
             var refs = directRefs.Values.ToList();
-            refs.Sort((r1, r2) => String.CompareOrdinal(r1.CanonicalName, r2.CanonicalName));
+            refs.Sort((r1, r2) => string.CompareOrdinal(r1.CanonicalName, r2.CanonicalName));
 
             return refs;
         }
@@ -3230,7 +3230,7 @@ namespace LibGit2Sharp.Core
 
 #region git_transport_
 
-        public static void git_transport_register(String prefix, IntPtr transport_cb, IntPtr param)
+        public static void git_transport_register(string prefix, IntPtr transport_cb, IntPtr param)
         {
             int res = NativeMethods.git_transport_register(prefix, transport_cb, param);
 
@@ -3243,7 +3243,7 @@ namespace LibGit2Sharp.Core
             Ensure.ZeroResult(res);
         }
 
-        public static void git_transport_unregister(String prefix)
+        public static void git_transport_unregister(string prefix)
         {
             int res = NativeMethods.git_transport_unregister(prefix);
 
@@ -3726,7 +3726,7 @@ namespace LibGit2Sharp.Core
 
             if (ignoredErrorCodes != null && ignoredErrorCodes.Contains((GitErrorCode)res))
             {
-                return new TResult[0];
+                return Array.Empty<TResult>();
             }
 
             Ensure.ZeroResult(res);
@@ -3747,7 +3747,7 @@ namespace LibGit2Sharp.Core
 
             if (ignoredErrorCodes != null && ignoredErrorCodes.Contains((GitErrorCode)res))
             {
-                return new TResult[0];
+                return Array.Empty<TResult>();
             }
 
             Ensure.ZeroResult(res);
@@ -3768,7 +3768,7 @@ namespace LibGit2Sharp.Core
 
             if (ignoredErrorCodes != null && ignoredErrorCodes.Contains((GitErrorCode)res))
             {
-                return new TResult[0];
+                return Array.Empty<TResult>();
             }
 
             Ensure.ZeroResult(res);
@@ -3791,7 +3791,7 @@ namespace LibGit2Sharp.Core
 
             if (ignoredErrorCodes != null && ignoredErrorCodes.Contains((GitErrorCode)res))
             {
-                return new TResult[0];
+                return Array.Empty<TResult>();
             }
 
             Ensure.ZeroResult(res);
