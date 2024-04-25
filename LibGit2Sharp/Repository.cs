@@ -9,6 +9,8 @@ using LibGit2Sharp.Core;
 using LibGit2Sharp.Core.Handles;
 using LibGit2Sharp.Handlers;
 
+using static System.Net.WebRequestMethods;
+
 namespace LibGit2Sharp
 {
     /// <summary>
@@ -738,6 +740,27 @@ namespace LibGit2Sharp
                 {
                     return false;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Convert given URL using the following configuration entries:
+        /// <code>
+        /// - url.[base].insteadOf
+        /// - url.[base].pushInsteadOf
+        /// </code>
+        /// For more information see <see href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlltbasegtinsteadOf"/>
+        /// </summary>
+        /// <param name="url">The URL to convert</param>
+        /// <returns>The converted URL.</returns>
+        public static string ConvertUrl(string url)
+        {
+            Ensure.ArgumentNotNull(url, "url");
+
+            using (RepositoryHandle repositoryHandle = Proxy.git_repository_new())
+            using (RemoteHandle remoteHandle = Proxy.git_remote_create_anonymous(repositoryHandle, url))
+            {
+                return Proxy.git_remote_url(remoteHandle);
             }
         }
 
