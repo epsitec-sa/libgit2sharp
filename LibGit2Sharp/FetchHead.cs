@@ -67,5 +67,41 @@ namespace LibGit2Sharp
         /// Determines if this fetch head entry has been explicitly fetched.
         /// </summary>
         public virtual bool ForMerge { get; private set; }
+
+        /// <summary>
+        /// Determine if the current <see cref="FetchHead"/> matches a local branch.
+        /// </summary>
+        /// <returns>true if the current <see cref="FetchHead"/> matches local branch, false otherwise.</returns>
+        public virtual bool IsLocalBranch
+        {
+            get { return RemoteCanonicalName.LooksLikeLocalBranch(); }
+        }
+
+        /// <summary>
+        /// Determine if the current <see cref="FetchHead"/> matches remote tracking branch.
+        /// </summary>
+        /// <returns>true if the current <see cref="FetchHead"/> matches remote tracking branch, false otherwise.</returns>
+        public virtual bool IsRemoteTrackingBranch
+        {
+            get { return RemoteCanonicalName.LooksLikeRemoteTrackingBranch(); }
+        }
+
+        /// <summary>
+        /// Determine if the current <see cref="FetchHead"/> matches tag.
+        /// </summary>
+        /// <returns>true if the current <see cref="FetchHead"/> matches tag, false otherwise.</returns>
+        public virtual bool IsTag
+        {
+            get { return RemoteCanonicalName.LooksLikeTag(); }
+        }
+
+        /// <summary>
+        /// Determine if the current <see cref="FetchHead"/> matches note.
+        /// </summary>
+        /// <returns>true if the current <see cref="FetchHead"/> matches note, false otherwise.</returns>
+        public virtual bool IsNote
+        {
+            get { return RemoteCanonicalName.LooksLikeNote(); }
+        }
     }
 }
