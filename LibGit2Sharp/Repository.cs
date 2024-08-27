@@ -1756,6 +1756,14 @@ namespace LibGit2Sharp
             return new RepositoryStatus(this, options);
         }
 
+        /// <summary>
+        /// Cleanup the 'currently running' state.
+        /// </summary>
+        public void StateCleanup()
+        {
+            Proxy.git_repository_state_cleanup(handle);
+        }
+
         internal void ReloadFromDisk()
         {
             Proxy.git_index_read(Index.Handle);
