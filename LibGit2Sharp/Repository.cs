@@ -561,7 +561,7 @@ namespace LibGit2Sharp
 
             using (ObjectHandle obj = Proxy.git_object_lookup(handle, id, type))
             {
-                if (obj == null || obj.IsNull)
+                if (obj == null || obj.IsInvalid)
                 {
                     return null;
                 }
@@ -814,8 +814,7 @@ namespace LibGit2Sharp
         /// <param name="workdirPath">Local path to clone into</param>
         /// <param name="options"><see cref="CloneOptions"/> controlling clone behavior</param>
         /// <returns>The path to the created repository.</returns>
-        public static string Clone(string sourceUrl, string workdirPath,
-            CloneOptions options)
+        public static string Clone(string sourceUrl, string workdirPath, CloneOptions options)
         {
             Ensure.ArgumentNotNull(sourceUrl, "sourceUrl");
             Ensure.ArgumentNotNull(workdirPath, "workdirPath");
@@ -827,8 +826,7 @@ namespace LibGit2Sharp
             var context = new RepositoryOperationContext(Path.GetFullPath(workdirPath), sourceUrl);
 
             // Notify caller that we are starting to work with the current repository.
-            bool continueOperation = OnRepositoryOperationStarting(options.FetchOptions.RepositoryOperationStarting,
-                                                                   context);
+            bool continueOperation = OnRepositoryOperationStarting(options.FetchOptions.RepositoryOperationStarting, context);
 
             if (!continueOperation)
             {
@@ -841,12 +839,13 @@ namespace LibGit2Sharp
                 var gitCheckoutOptions = checkoutOptionsWrapper.Options;
 
                 var gitFetchOptions = fetchOptionsWrapper.Options;
+                gitFetchOptions.Depth = options.FetchOptions.Depth;
                 gitFetchOptions.ProxyOptions = options.FetchOptions.ProxyOptions.CreateGitProxyOptions();
                 gitFetchOptions.RemoteCallbacks = new RemoteCallbacks(options.FetchOptions).GenerateCallbacks();
+
                 if (options.FetchOptions != null && options.FetchOptions.CustomHeaders != null)
                 {
-                    gitFetchOptions.CustomHeaders =
-                        GitStrArrayManaged.BuildFrom(options.FetchOptions.CustomHeaders);
+                    gitFetchOptions.CustomHeaders = GitStrArrayManaged.BuildFrom(options.FetchOptions.CustomHeaders);
                 }
 
                 var cloneOpts = new GitCloneOptions
@@ -874,8 +873,7 @@ namespace LibGit2Sharp
                 }
 
                 // Notify caller that we are done with the current repository.
-                OnRepositoryOperationCompleted(options.FetchOptions.RepositoryOperationCompleted,
-                                               context);
+                OnRepositoryOperationCompleted(options.FetchOptions.RepositoryOperationCompleted, context);
 
                 // Recursively clone submodules if requested.
                 try
@@ -884,9 +882,7 @@ namespace LibGit2Sharp
                 }
                 catch (Exception ex)
                 {
-                    throw new RecurseSubmodulesException("The top level repository was cloned, but there was an error cloning its submodules.",
-                                                         ex,
-                                                         clonedRepoPath);
+                    throw new RecurseSubmodulesException("The top level repository was cloned, but there was an error cloning its submodules.", ex, clonedRepoPath);
                 }
 
                 return clonedRepoPath;
@@ -1831,7 +1827,7 @@ namespace LibGit2Sharp
             using (var objH = handles.Item1)
             using (var refH = handles.Item2)
             {
-                reference = refH.IsNull ? null : Reference.BuildFromPtr<Reference>(refH, this);
+                reference = refH.IsInvalid ? null : Reference.BuildFromPtr<Reference>(refH, this);
                 obj = GitObject.BuildFrom(this, Proxy.git_object_id(objH), Proxy.git_object_type(objH), PathFromRevparseSpec(revision));
             }
         }

@@ -90,17 +90,32 @@ namespace LibGit2Sharp.Tests
             var extensions = GlobalSettings.GetExtensions();
 
             // Assert that "noop" is supported by default
-            Assert.Equal(new[] { "noop", "objectformat" }, extensions);
+            Assert.Equal(new[] { "noop", "objectformat", "worktreeconfig" }, extensions);
 
             // Disable "noop" extensions
             GlobalSettings.SetExtensions("!noop");
             extensions = GlobalSettings.GetExtensions();
-            Assert.Equal(new[] { "objectformat" }, extensions);
+            Assert.Equal(new[] { "objectformat", "worktreeconfig" }, extensions);
 
             // Enable two new extensions (it will reset the configuration and "noop" will be enabled)
             GlobalSettings.SetExtensions("partialclone", "newext");
             extensions = GlobalSettings.GetExtensions();
-            Assert.Equal(new[] { "newext", "noop", "objectformat", "partialclone" }, extensions);
+            Assert.Equal(new[] { "newext", "noop", "objectformat", "partialclone", "worktreeconfig" }, extensions);
+        }
+
+        [Fact]
+        public void OwnerValidation()
+        {
+            // Assert that owner validation is enabled by default
+            Assert.True(GlobalSettings.GetOwnerValidation());
+
+            // Disable owner validation
+            GlobalSettings.SetOwnerValidation(false);
+            Assert.False(GlobalSettings.GetOwnerValidation());
+
+            // Enable it again
+            GlobalSettings.SetOwnerValidation(true);
+            Assert.True(GlobalSettings.GetOwnerValidation());
         }
     }
 }
