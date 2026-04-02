@@ -67,12 +67,14 @@ namespace LibGit2Sharp.Core
                 // before A.
                 foreach (var reference in refsToRewrite.OrderBy(ReferenceDepth))
                 {
-                    // TODO: Rewrite refs/notes/* properly
-                    //if (reference.CanonicalName.StartsWith("refs/notes/"))
-                    //{
-                    //    continue;
-                    //}
-                    RewriteReference(reference);
+                    if (reference.CanonicalName.StartsWith("refs/notes/", StringComparison.Ordinal))
+                    {
+                        RewriteNotesReference(reference);
+                    }
+                    else
+                    {
+                        RewriteReference(reference);
+                    }
                 }
 
                 success = true;
@@ -105,6 +107,174 @@ namespace LibGit2Sharp.Core
                 rollbackActions.Clear();
                 Directory.Delete(Path.Combine(repo.Info.Path, backupRefsNamespace), recursive: true);
             }
+        }
+
+        private Reference RewriteNotesReference(Reference reference)
+        {
+            // Has this ref already been rewritten?
+            if (refMap.ContainsKey(reference))
+            {
+                return refMap[reference];
+            }
+
+            var sref = reference as SymbolicReference;
+            if (sref != null)
+            {
+                return RewriteReference(sref,
+                                        old => old.Target,
+                                        RewriteNotesReference,
+                                        (refs, old, target, logMessage) => refs.UpdateTarget(old,
+                                                                                     target,
+                                                                                     logMessage));
+            }
+
+            var dref = reference as DirectReference;
+            if (dref != null)
+            {
+                return RewriteReference(dref,
+                                        old => old.Target,
+                                        RewriteNotesTarget,
+                                        (refs, old, target, logMessage) => refs.UpdateTarget(old,
+                                                                                     target.Id,
+                                                                                     logMessage));
+            }
+
+            return reference;
+        }
+
+        private GitObject RewriteNotesTarget(GitObject oldTarget)
+        {
+            // Has this target already been rewritten?
+            if (objectMap.ContainsKey(oldTarget))
+            {
+                return objectMap[oldTarget];
+            }
+
+            var oldCommit = oldTarget as Commit;
+            if (oldCommit == null)
+            {
+                // Notes refs normally point to commits. Fallback to regular target rewrite for safety.
+                return RewriteTarget(oldTarget);
+            }
+
+            var td = TreeDefinition.From(oldCommit.Tree);
+            var changed = false;
+
+            foreach (var noteEntry in EnumerateNoteEntries(oldCommit.Tree))
+            {
+                ObjectId annotatedObjectId;
+                if (!TryParseAnnotatedObjectId(noteEntry.Path, out annotatedObjectId))
+                {
+                    continue;
+                }
+
+                var annotatedObject = repo.Lookup(annotatedObjectId);
+                if (annotatedObject == null)
+                {
+                    continue;
+                }
+
+                GitObject mappedAnnotatedObject;
+                if (!objectMap.TryGetValue(annotatedObject, out mappedAnnotatedObject))
+                {
+                    continue;
+                }
+
+                td.Remove(noteEntry.Path);
+                changed = true;
+
+                if (mappedAnnotatedObject == null)
+                {
+                    // Drop note for pruned/removed target.
+                    continue;
+                }
+
+                var newPath = NotesPath(mappedAnnotatedObject.Id);
+                td.Add(newPath, noteEntry.Entry.Target.Id, noteEntry.Entry.Mode);
+            }
+
+            if (!changed)
+            {
+                objectMap[oldCommit] = oldCommit;
+                return oldCommit;
+            }
+
+            var newTree = repo.ObjectDatabase.CreateTree(td);
+            var mappedParents = oldCommit.Parents
+                .Select(oldParent => objectMap.ContainsKey(oldParent)
+                            ? objectMap[oldParent] as Commit
+                            : oldParent)
+                .Where(newParent => newParent != null)
+                .ToList();
+
+            var newCommit = repo.ObjectDatabase.CreateCommit(oldCommit.Author,
+                                                             oldCommit.Committer,
+                                                             oldCommit.Message,
+                                                             newTree,
+                                                             mappedParents,
+                                                             options.PrettifyMessages);
+
+            objectMap[oldCommit] = newCommit;
+            return newCommit;
+        }
+
+        private static IEnumerable<NoteBlobEntry> EnumerateNoteEntries(Tree tree)
+        {
+            return Enumerate(tree, null);
+
+            static IEnumerable<NoteBlobEntry> Enumerate(Tree currentTree, string? prefix)
+            {
+                foreach (var entry in currentTree)
+                {
+                    var relativePath = string.IsNullOrEmpty(prefix)
+                        ? entry.Name
+                        : prefix + "/" + entry.Name;
+
+                    if (entry.TargetType == TreeEntryTargetType.Tree)
+                    {
+                        foreach (var nested in Enumerate((Tree)entry.Target, relativePath))
+                        {
+                            yield return nested;
+                        }
+                        continue;
+                    }
+
+                    if (entry.TargetType == TreeEntryTargetType.Blob)
+                    {
+                        yield return new NoteBlobEntry(relativePath, entry);
+                    }
+                }
+            }
+        }
+
+        private static bool TryParseAnnotatedObjectId(string notePath, out ObjectId objectId)
+        {
+            var normalized = notePath.Replace('\\', '/').Replace("/", string.Empty);
+            if (normalized.Length != ObjectId.HexSize)
+            {
+                objectId = null;
+                return false;
+            }
+
+            return ObjectId.TryParse(normalized, out objectId);
+        }
+
+        private static string NotesPath(ObjectId annotatedObjectId)
+        {
+            var sha = annotatedObjectId.Sha;
+            return sha.Substring(0, 2) + "/" + sha.Substring(2);
+        }
+
+        private sealed class NoteBlobEntry
+        {
+            public NoteBlobEntry(string path, TreeEntry entry)
+            {
+                Path = path;
+                Entry = entry;
+            }
+
+            public string Path { get; private set; }
+            public TreeEntry Entry { get; private set; }
         }
 
         private Reference RewriteReference(Reference reference)
