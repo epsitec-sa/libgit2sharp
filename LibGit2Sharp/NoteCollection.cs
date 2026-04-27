@@ -53,6 +53,13 @@ namespace LibGit2Sharp
         #endregion
 
         /// <summary>
+        /// The <see cref="Repository"/> to which this collection of <see cref="Note"/> belongs.
+        /// </summary>
+        public Repository Repository
+        {
+            get { return repo; }
+        }
+        /// <summary>
         /// The default namespace for notes.
         /// </summary>
         public virtual string DefaultNamespace
