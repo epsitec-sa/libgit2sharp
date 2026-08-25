@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <!-- Use net8 language version -->
+    <LangVersion>12</LangVersion>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('$(MSBuildThisFile)', '$(MSBuildThisFileDirectory)../'))" />
+</Project>
