@@ -38,7 +38,7 @@
   <ItemGroup>
     <PackageReference Include="libgit2.ssh" PrivateAssets="none" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
-    <PackageReference Include="MinVer" PrivateAssets="all" />
+    <!--<PackageReference Include="MinVer" PrivateAssets="all" />-->
   </ItemGroup>
 
   <Import Project="..\Targets\CodeGenerator.targets" />
@@ -50,10 +50,10 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="AdjustVersions" AfterTargets="MinVer">
+  <!--<Target Name="AdjustVersions" AfterTargets="MinVer">
     <PropertyGroup>
       <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).0.0</AssemblyVersion>
     </PropertyGroup>
-  </Target>
+  </Target>-->
 
 </Project>
