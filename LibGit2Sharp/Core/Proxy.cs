@@ -130,37 +130,59 @@ namespace LibGit2Sharp.Core
 
         public static IEnumerable<Branch> git_branch_iterator(Repository repo, GitBranchType branchType)
         {
-            IntPtr iter;
-            var res = NativeMethods.git_branch_iterator_new(out iter, repo.Handle.AsIntPtr(), branchType);
-            Ensure.ZeroResult(res);
+            var branches = new System.Collections.Generic.List<Branch>();
+
+            bool refAdded = false;
+            if (!repo.Handle.TryAddRef(ref refAdded))
+            {
+                return branches;
+            }
 
             try
             {
-                while (true)
+                using (NativeThreadGate.Acquire())
                 {
-                    IntPtr refPtr = IntPtr.Zero;
-                    GitBranchType _branchType;
-                    res = NativeMethods.git_branch_next(out refPtr, out _branchType, iter);
-                    if (res == (int)GitErrorCode.IterOver)
-                    {
-                        yield break;
-                    }
+                    IntPtr iter;
+                    int res = NativeMethods.git_branch_iterator_new(out iter, repo.Handle.AsIntPtr(), branchType);
                     Ensure.ZeroResult(res);
 
-                    Reference reference;
-                    using (var refHandle = new ReferenceHandle(refPtr, true))
+                    try
                     {
-                        reference = Reference.BuildFromPtr<Reference>(refHandle, repo);
+                        while (true)
+                        {
+                            IntPtr refPtr = IntPtr.Zero;
+                            GitBranchType _branchType;
+                            res = NativeMethods.git_branch_next(out refPtr, out _branchType, iter);
+                            if (res == (int)GitErrorCode.IterOver)
+                            {
+                                break;
+                            }
+                            Ensure.ZeroResult(res);
+
+                            Reference reference;
+                            using (var refHandle = new ReferenceHandle(refPtr, true))
+                            {
+                                reference = Reference.BuildFromPtr<Reference>(refHandle, repo);
+                            }
+                            branches.Add(new Branch(repo, reference, reference.CanonicalName));
+                        }
                     }
-                    yield return new Branch(repo, reference, reference.CanonicalName);
+                    finally
+                    {
+                        NativeMethods.git_branch_iterator_free(iter);
+                    }
                 }
             }
             finally
             {
-                NativeMethods.git_branch_iterator_free(iter);
+                if (refAdded)
+                {
+                    repo.Handle.DangerousRelease();
+                }
             }
-        }
 
+            return branches;
+        }
         public static void git_branch_iterator_free(IntPtr iter)
         {
             NativeMethods.git_branch_iterator_free(iter);
@@ -1478,7 +1500,12 @@ namespace LibGit2Sharp.Core
             git_object* handle;
             GitOid oid = id.Oid;
 
-            int res = NativeMethods.git_object_lookup(out handle, repo, ref oid, type);
+            int res;
+            using (NativeThreadGate.Acquire())
+            {
+                res = NativeMethods.git_object_lookup(out handle, repo, ref oid, type);
+            }
+
             switch (res)
             {
                 case (int)GitErrorCode.NotFound:
@@ -1922,7 +1949,10 @@ namespace LibGit2Sharp.Core
             string glob,
             Func<IntPtr, TResult> resultSelector)
         {
-            return git_foreach(resultSelector, c => NativeMethods.git_reference_foreach_glob(repo, glob, (x, p) => c(x, p), IntPtr.Zero));
+            using (NativeThreadGate.Acquire())
+            {
+                return git_foreach(resultSelector, c => NativeMethods.git_reference_foreach_glob(repo, glob, (x, p) => c(x, p), IntPtr.Zero));
+            }
         }
 
         public static bool git_reference_is_valid_name(string refname)
@@ -1952,17 +1982,37 @@ namespace LibGit2Sharp.Core
 
         public static unsafe ReferenceHandle git_reference_lookup(RepositoryHandle repo, string name, bool shouldThrowIfNotFound)
         {
-            git_reference* handle;
-            int res = NativeMethods.git_reference_lookup(out handle, repo, name);
-
-            if (!shouldThrowIfNotFound && res == (int)GitErrorCode.NotFound)
+            bool refAdded = false;
+            if (!repo.TryAddRef(ref refAdded))
             {
                 return null;
             }
 
-            Ensure.ZeroResult(res);
+            try
+            {
+                git_reference* handle;
+                int res;
+                using (NativeThreadGate.Acquire())
+                {
+                    res = NativeMethods.git_reference_lookup(out handle, repo, name);
+                }
 
-            return new ReferenceHandle(handle, true);
+                if (!shouldThrowIfNotFound && res == (int)GitErrorCode.NotFound)
+                {
+                    return null;
+                }
+
+                Ensure.ZeroResult(res);
+
+                return new ReferenceHandle(handle, true);
+            }
+            finally
+            {
+                if (refAdded)
+                {
+                    repo.DangerousRelease();
+                }
+            }
         }
 
         public static unsafe string git_reference_name(git_reference* reference)
@@ -3018,7 +3068,10 @@ namespace LibGit2Sharp.Core
 
         public static unsafe ICollection<TResult> git_submodule_foreach<TResult>(RepositoryHandle repo, Func<IntPtr, IntPtr, TResult> resultSelector)
         {
-            return git_foreach(resultSelector, c => NativeMethods.git_submodule_foreach(repo, (x, y, p) => c(x, y, p), IntPtr.Zero));
+            using (NativeThreadGate.Acquire())
+            {
+                return git_foreach(resultSelector, c => NativeMethods.git_submodule_foreach(repo, (x, y, p) => c(x, y, p), IntPtr.Zero));
+            }
         }
 
         public static unsafe void git_submodule_add_to_index(SubmoduleHandle submodule, bool write_index)

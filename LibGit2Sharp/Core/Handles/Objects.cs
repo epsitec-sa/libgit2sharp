@@ -68,7 +68,15 @@ namespace LibGit2Sharp.Core.Handles
 
         protected override bool ReleaseHandle()
         {
-            NativeMethods.git_repository_free((git_repository*)AsIntPtr());
+            // Acquire the same lock used by every Proxy native call so that
+            // git_repository_free cannot run concurrently with any ongoing
+            // P/Invoke that still holds a raw git_repository* pointer.
+            // Monitor is reentrant in .NET, so this is deadlock-safe even
+            // when Dispose() is called from inside a native callback.
+            using (NativeThreadGate.Acquire())
+            {
+                NativeMethods.git_repository_free((git_repository*)AsIntPtr());
+            }
 
             return true;
         }
@@ -76,6 +84,25 @@ namespace LibGit2Sharp.Core.Handles
         public static implicit operator git_repository*(RepositoryHandle handle)
         {
             return (git_repository*)handle.AsIntPtr();
+        }
+
+        /// <summary>
+        /// Increments the SafeHandle reference count to pin the native pointer
+        /// for the duration of a native call.  Returns false (without throwing)
+        /// when the handle has already been disposed so callers can bail out
+        /// gracefully instead of crashing inside native code.
+        /// </summary>
+        internal bool TryAddRef(ref bool refAdded)
+        {
+            try
+            {
+                DangerousAddRef(ref refAdded);
+                return true;
+            }
+            catch (ObjectDisposedException)
+            {
+                return false;
+            }
         }
     }
 

@@ -275,7 +275,15 @@ namespace LibGit2Sharp
 
         internal RepositoryHandle Handle
         {
-            get { return handle; }
+            get
+            {
+                if (handle.IsClosed || handle.IsInvalid)
+                {
+                    throw new ObjectDisposedException(nameof(Repository));
+                }
+
+                return handle;
+            }
         }
 
         /// <summary>
@@ -559,14 +567,37 @@ namespace LibGit2Sharp
         {
             Ensure.ArgumentNotNull(id, "id");
 
-            using (ObjectHandle obj = Proxy.git_object_lookup(handle, id, type))
+            // Protect the native repository handle for the duration of the lookup.
+            // Without DangerousAddRef, a concurrent Dispose() can free the git_repository*
+            // before the P/Invoke call completes, causing a 0xC0000005 access violation.
+            bool handleRefAdded = false;
+            try
             {
-                if (obj == null || obj.IsInvalid)
-                {
-                    return null;
-                }
+                handle.DangerousAddRef(ref handleRefAdded);
+            }
+            catch (ObjectDisposedException)
+            {
+                return null;
+            }
 
-                return GitObject.BuildFrom(this, id, Proxy.git_object_type(obj), knownPath);
+            try
+            {
+                using (ObjectHandle obj = Proxy.git_object_lookup(handle, id, type))
+                {
+                    if (obj == null || obj.IsInvalid)
+                    {
+                        return null;
+                    }
+
+                    return GitObject.BuildFrom(this, id, Proxy.git_object_type(obj), knownPath);
+                }
+            }
+            finally
+            {
+                if (handleRefAdded)
+                {
+                    handle.DangerousRelease();
+                }
             }
         }
 
